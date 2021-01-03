@@ -6,7 +6,9 @@ export const ApiContext = createContext()
 
 export function ApiProvider(props) {
 
-    const [predictions, setPredictions] = useState([]);
+    const [predictions, setPredictions] = useState({
+        data: []
+    });
     const [loading, setLoading] = useState(false);
     const { getError, clearError, error } = useContext(ErrorContext);
 
@@ -19,11 +21,8 @@ export function ApiProvider(props) {
 
             console.log('Analyzing...');
 
-            // Parse URL
-            let id = videoURL.split(/(v=)/g)[2];
-
             // Make request to the API
-            const result = await axios.post(`https://cors-anywhere.herokuapp.com/https://app-youtube-sentiments.herokuapp.com/api/comments/${id}?maxResults=${numberComments}&order=${order}`);
+            const result = await axios.post(`https://cors-anywhere.herokuapp.com/https://app-youtube-sentiments.herokuapp.com/api/comments/${videoURL}?maxResults=${numberComments}&order=${order}`);
 
             // Check for errors
             if (result.data.success) {
@@ -63,7 +62,7 @@ export function ApiProvider(props) {
 
 
     return (
-        <ApiContext.Provider value={{ predictions, loading, getPredictions }}>
+        <ApiContext.Provider value={{ predictions, loading, getPredictions, setLoading }}>
             {props.children}
         </ApiContext.Provider>
     )

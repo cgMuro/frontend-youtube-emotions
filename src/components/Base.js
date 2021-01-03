@@ -14,7 +14,7 @@ export default function Base() {
                 <Info />
                 <Switch>
                     <Route path="/" exact component={Home} />
-                    <Route path="/predictions" exact component={Analysis} />
+                    <Route path="/predictions/:id" exact component={Analysis} />
                 </Switch>
             </Container>
         </Router>
