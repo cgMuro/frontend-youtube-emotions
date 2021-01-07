@@ -11,7 +11,7 @@ export default function Base() {
     return (
         <Router>
             <Container className="p-0 d-flex justify-content-center align-items-center" id="base">
-                <Info />
+                {/* <Info /> */}
                 <Switch>
                     <Route path="/" exact component={Home} />
                     <Route path="/predictions/:id" exact component={Analysis} />
