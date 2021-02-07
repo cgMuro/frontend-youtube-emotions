@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Container } from 'reactstrap';
 
 // Components
-import Info from './Info';
+// import Info from './Info';
 import Home from './Home';
 import Analysis from './Analysis';
 

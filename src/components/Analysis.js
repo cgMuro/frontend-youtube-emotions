@@ -51,11 +51,12 @@ export default function Analysis() {
             return;
         });
 
-        setCounter({
+        setCounter((prevState) => ({
+            ...prevState,
             positive,
             negative,
             neutral
-        });
+        }));
     }
 
     useEffect(async () => {
@@ -87,7 +88,7 @@ export default function Analysis() {
                                     setIsOpenNegative(false);
                                     setIsOpenNeutral(false);
                                 }}
-                                    className="d-flex flex-row align-items-center pl-4"
+                                    className="d-flex flex-row align-items-center pl-3"
                                 >
                                     <div className="counter-container" style={{ backgroundColor: 'rgba(0, 255, 0, 0.7)' }}>{counter.positive}</div><p className="mb-0"><span className="mr-2">😀</span>Positive</p>
                                     <i className={`ml-auto fa fa-arrow-down ${isOpenPositive ? 'rotate-arrow-collapse' : null}`}></i>
@@ -127,7 +128,7 @@ export default function Analysis() {
                                         setIsOpenNegative(prevState => !prevState);
                                         setIsOpenNeutral(false);
                                     }}
-                                    className="d-flex flex-row align-items-center pl-4"
+                                    className="d-flex flex-row align-items-center pl-3"
                                 >
                                     <div className="counter-container" style={{ backgroundColor: 'rgba(255, 0, 0, 0.7)' }}>{counter.negative}</div><p className="mb-0"><span className="mr-2">🤬</span>Negative</p>
                                     <i className={`ml-auto fa fa-arrow-down ${isOpenNegative ? 'rotate-arrow-collapse' : null}`}></i>
@@ -167,7 +168,7 @@ export default function Analysis() {
                                         setIsOpenNegative(false);
                                         setIsOpenNeutral(prevState => !prevState);
                                     }}
-                                    className="d-flex flex-row align-items-center pl-4"
+                                    className="d-flex flex-row align-items-center pl-3"
                                 >
                                     <div className="counter-container" style={{ backgroundColor: 'rgba(169, 169, 169, 0.7)' }}>{counter.neutral}</div><p className="mb-0"><span className="mr-2">😶</span>Neutral/Other</p>
                                     <i className={`ml-auto fa fa-arrow-down ${isOpenNeutral ? 'rotate-arrow-collapse' : null}`}></i>
