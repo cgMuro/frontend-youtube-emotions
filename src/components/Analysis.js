@@ -27,46 +27,62 @@ export default function Analysis() {
     const [isOpenPositive, setIsOpenPositive] = useState(false);
     const [isOpenNegative, setIsOpenNegative] = useState(false);
     const [isOpenNeutral, setIsOpenNeutral] = useState(false);
+    const [isOpenFeedback, setIsOpenFeedback] = useState(false);
+    const [isOpenSadness, setIsOpenSadness] = useState(false);
 
     const [counter, setCounter] = useState({
         positive: 0,
         negative: 0,
-        neutral: 0
+        neutral: 0,
+        feedback: 0,
+        sadness: 0,
     })
 
     // Count the number of positive, negative and neutral comments
     const counterFunction = () => {
-        let positive = 0;
-        let negative = 0;
-        let neutral = 0;
-
         predictions.data.map(block => {
             if (block.prediction === 'positive') {
-                positive++;
+                setCounter(prevState => ({
+                    ...prevState,
+                    positive: prevState.positive + 1
+                }))
             } else if (block.prediction === 'negative') {
-                negative++;
+                setCounter(prevState => ({
+                    ...prevState,
+                    negative: prevState.negative + 1
+                }))
             } else if (block.prediction === 'neutral/other') {
-                neutral++;
+                setCounter(prevState => ({
+                    ...prevState,
+                    neutral: prevState.neutral + 1
+                }))
+            } else if (block.prediction === 'constructive feedback/idea') {
+                setCounter(prevState => ({
+                    ...prevState,
+                    feedback: prevState.feedback + 1
+                }))
+            } else if (block.prediction === 'sadness') {
+                setCounter(prevState => ({
+                    ...prevState,
+                    sadness: prevState.sadness + 1
+                }))
             }
-            return;
-        });
-
-        setCounter((prevState) => ({
-            ...prevState,
-            positive,
-            negative,
-            neutral
-        }));
+        })
     }
+    // Update counter when predictions come
+    useEffect(() => {
+        setCounter({ positive: 0, negative: 0, neutral: 0, feedback: 0, sadness: 0 });
+        counterFunction();
+    }, [predictions])
 
     useEffect(async () => {
         const res = await fetchPredictions();
-        counterFunction();
-
+        // Return to home is something went wrong
         if (!res) {
             history.push('/');
         }
     }, [])
+
 
     return (
         <>
@@ -87,10 +103,12 @@ export default function Analysis() {
                                     setIsOpenPositive(prevState => !prevState);
                                     setIsOpenNegative(false);
                                     setIsOpenNeutral(false);
+                                    setIsOpenFeedback(false);
+                                    setIsOpenSadness(false);
                                 }}
                                     className="d-flex flex-row align-items-center pl-3"
                                 >
-                                    <div className="counter-container" style={{ backgroundColor: 'rgba(0, 255, 0, 0.7)' }}>{counter.positive}</div><p className="mb-0"><span className="mr-2">😀</span>Positive</p>
+                                    <div className="counter-container" style={{ backgroundColor: 'rgba(0, 255, 0, 0.7)' }}>{counter.positive}</div><p className="mb-0"><span className="mr-2">😀</span>Positive (joy/happiness/amusement/love)</p>
                                     <i className={`ml-auto fa fa-arrow-down ${isOpenPositive ? 'rotate-arrow-collapse' : null}`}></i>
                                 </Container>
                                 <Collapse isOpen={isOpenPositive}>
@@ -127,10 +145,12 @@ export default function Analysis() {
                                         setIsOpenPositive(false);
                                         setIsOpenNegative(prevState => !prevState);
                                         setIsOpenNeutral(false);
+                                        setIsOpenFeedback(false);
+                                        setIsOpenSadness(false);
                                     }}
                                     className="d-flex flex-row align-items-center pl-3"
                                 >
-                                    <div className="counter-container" style={{ backgroundColor: 'rgba(255, 0, 0, 0.7)' }}>{counter.negative}</div><p className="mb-0"><span className="mr-2">🤬</span>Negative</p>
+                                    <div className="counter-container" style={{ backgroundColor: 'rgba(255, 0, 0, 0.7)' }}>{counter.negative}</div><p className="mb-0"><span className="mr-2">🤬</span>Negative (anger/hate/disgust)</p>
                                     <i className={`ml-auto fa fa-arrow-down ${isOpenNegative ? 'rotate-arrow-collapse' : null}`}></i>
                                 </Container>
                                 <Collapse isOpen={isOpenNegative}>
@@ -167,6 +187,8 @@ export default function Analysis() {
                                         setIsOpenPositive(false);
                                         setIsOpenNegative(false);
                                         setIsOpenNeutral(prevState => !prevState);
+                                        setIsOpenFeedback(false);
+                                        setIsOpenSadness(false);
                                     }}
                                     className="d-flex flex-row align-items-center pl-3"
                                 >
@@ -199,6 +221,91 @@ export default function Analysis() {
                                     </Container>
                                 </Collapse>
                             </Container>
+
+                            {/* CONSTRUCTIVE FEEDBACK/IDEA */}
+                            <Container fluid className="toggle-container p-0">
+                                <Container fluid
+                                    onClick={() => {
+                                        setIsOpenPositive(false);
+                                        setIsOpenNegative(false);
+                                        setIsOpenNeutral(false);
+                                        setIsOpenFeedback(prevState => !prevState);
+                                        setIsOpenSadness(false);
+                                    }}
+                                    className="d-flex flex-row align-items-center pl-3"
+                                >
+                                    <div className="counter-container" style={{ backgroundColor: 'rgba(242, 156, 43, 0.7)' }}>{counter.feedback}</div><p className="mb-0"><span className="mr-2">💡</span>Constructive Feedback/Idea</p>
+                                    <i className={`ml-auto fa fa-arrow-down ${isOpenFeedback ? 'rotate-arrow-collapse' : null}`}></i>
+                                </Container>
+                                <Collapse isOpen={isOpenFeedback}>
+                                    <Container className="comments-container mb-3">
+                                        {
+                                            predictions.data.map(block => {
+                                                if (block.prediction === 'constructive feedback/idea') {
+                                                    return (
+                                                        <Row className="my-3">
+                                                            <Col md={1}>
+                                                                <img
+                                                                    className="img-fluid avatar"
+                                                                    src={block.author_profile_pic_url} 
+                                                                    alt={`${block.author}-profile_pic`}
+                                                                />
+                                                            </Col>
+                                                            <Col>
+                                                                <p><a href={block.author_channel_url} target="_blank"><b>{block.author}</b></a></p>
+                                                                <p>{block.comment}</p>
+                                                            </Col>
+                                                        </Row>
+                                                    )
+                                                }
+                                            })
+                                        }
+                                    </Container>
+                                </Collapse>
+                            </Container>
+
+                            {/* SADNESS */}
+                            <Container fluid className="toggle-container p-0">
+                                <Container fluid
+                                    onClick={() => {
+                                        setIsOpenPositive(false);
+                                        setIsOpenNegative(false);
+                                        setIsOpenNeutral(false);
+                                        setIsOpenFeedback(false);
+                                        setIsOpenSadness(prevState => !prevState);
+                                    }}
+                                    className="d-flex flex-row align-items-center pl-3"
+                                >
+                                    <div className="counter-container" style={{ backgroundColor: 'rgba(51, 51, 255, 0.7)' }}>{counter.sadness}</div><p className="mb-0"><span className="mr-2">😭</span>Sadness</p>
+                                    <i className={`ml-auto fa fa-arrow-down ${isOpenSadness ? 'rotate-arrow-collapse' : null}`}></i>
+                                </Container>
+                                <Collapse isOpen={isOpenSadness}>
+                                    <Container className="comments-container mb-3">
+                                        {
+                                            predictions.data.map(block => {
+                                                if (block.prediction === 'sadness') {
+                                                    return (
+                                                        <Row className="my-3">
+                                                            <Col md={1}>
+                                                                <img
+                                                                    className="img-fluid avatar"
+                                                                    src={block.author_profile_pic_url} 
+                                                                    alt={`${block.author}-profile_pic`}
+                                                                />
+                                                            </Col>
+                                                            <Col>
+                                                                <p><a href={block.author_channel_url} target="_blank"><b>{block.author}</b></a></p>
+                                                                <p>{block.comment}</p>
+                                                            </Col>
+                                                        </Row>
+                                                    )
+                                                }
+                                            })
+                                        }
+                                    </Container>
+                                </Collapse>
+                            </Container>
+
                         </Container>
 
                     </Container>

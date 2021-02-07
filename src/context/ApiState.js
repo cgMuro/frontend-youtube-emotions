@@ -13,7 +13,7 @@ export function ApiProvider(props) {
     const { getError, clearError, error } = useContext(ErrorContext);
 
     // Get predictions
-    // GET https://app-youtube-sentiments.herokuapp.com/
+    // GET https://app-youtube-sentiments.herokuapp.com/   https://cors-anywhere.herokuapp.com/
     const getPredictions = async(videoURL, numberComments=20, order='relevance') => {
         try {
             // Set the page to loading
@@ -22,7 +22,7 @@ export function ApiProvider(props) {
             console.log('Analyzing...');
 
             // Make request to the API
-            const result = await axios.post(`https://cors-anywhere.herokuapp.com/https://app-youtube-sentiments.herokuapp.com/api/comments/${videoURL}?maxResults=${numberComments}&order=${order}`);
+            const result = await axios.post(`https://app-youtube-sentiments.herokuapp.com/api/comments/${videoURL}?maxResults=${numberComments}&order=${order}`);
 
             // Check for errors
             if (result.data.success) {
