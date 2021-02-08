@@ -1,0 +1,1 @@
+Frontend application for the machine learning model describe in this [repo](https://github.com/cgMuro/youtube-emotions), the website is deployed [here](https://youtube-emotions.netlify.app/) using Netlify.
