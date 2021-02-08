@@ -67,6 +67,7 @@ export default function Analysis() {
                     sadness: prevState.sadness + 1
                 }))
             }
+            return null;
         })
     }
     // Update counter when predictions come
@@ -210,7 +211,7 @@ export default function Analysis() {
                                                                 />
                                                             </Col>
                                                             <Col>
-                                                                <p><a href={block.author_channel_url} target="_blank"><b>{block.author}</b></a></p>
+                                                                <p><a href={block.author_channel_url} target="_blank" rel="noreferrer"><b>{block.author}</b></a></p>
                                                                 <p>{block.comment}</p>
                                                             </Col>
                                                         </Row>
@@ -252,7 +253,7 @@ export default function Analysis() {
                                                                 />
                                                             </Col>
                                                             <Col>
-                                                                <p><a href={block.author_channel_url} target="_blank"><b>{block.author}</b></a></p>
+                                                                <p><a href={block.author_channel_url} target="_blank" rel="noreferrer"><b>{block.author}</b></a></p>
                                                                 <p>{block.comment}</p>
                                                             </Col>
                                                         </Row>
@@ -294,7 +295,7 @@ export default function Analysis() {
                                                                 />
                                                             </Col>
                                                             <Col>
-                                                                <p><a href={block.author_channel_url} target="_blank"><b>{block.author}</b></a></p>
+                                                                <p><a href={block.author_channel_url} target="_blank" rel="noreferrer"><b>{block.author}</b></a></p>
                                                                 <p>{block.comment}</p>
                                                             </Col>
                                                         </Row>
